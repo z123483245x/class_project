@@ -8,7 +8,7 @@ import time
 start_time = time.time()
 # 設定起始日期和結束日期
 start_date = datetime.datetime(2022, 4, 12)
-end_date = datetime.datetime.datetime(2023, 4, 13)
+end_date = datetime.datetime.now()
 
 # 設定要取得的時間區間，每個時間區間為一個月
 periods = []
@@ -39,7 +39,7 @@ for period in periods:
 
     # 將表格內容存儲到 list 中
     rows = table.find_all('tr')
-    
+    for row in rows:
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         data.append([ele for ele in cols if ele])
