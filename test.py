@@ -7,7 +7,7 @@ import time
 
 start_time = time.time()
 # 設定起始日期和結束日期
-start_date = datetime.datetime(1927, 12, 31)
+start_date = datetime.datetime(2022, 4, 12)
 end_date = datetime.datetime.now()
 
 # 設定要取得的時間區間，每個時間區間為一個月
@@ -49,7 +49,7 @@ for period in periods:
 
 # 篩選出所需的數據
 header = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-data = data[0:-1]
+data = data[1:] # 移除標頭列
 data = [[datetime.datetime.strptime(ele[0], '%b %d, %Y').strftime('%Y/%m/%d'), ele[1], ele[2], ele[3], ele[4], ele[5], ele[6]] if len(ele) == 7 else [] for ele in data]
 data = [ele for ele in data if ele]
 # 將資料根據日期排序
@@ -58,10 +58,11 @@ data = sorted(data, key=lambda x: datetime.datetime.strptime(x[0], '%Y/%m/%d'))
 print(data)
 
 # 將數據存儲到 CSV 文件中
-with open('GSPC.csv', 'w', newline='') as file:
+with open('GSPC_test.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(header)
     writer.writerows(data)
+
 
 end_time = time.time()
 
