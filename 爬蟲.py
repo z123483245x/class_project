@@ -8,7 +8,7 @@ import time
 start_time = time.time()
 # 設定起始日期和結束日期
 start_date = datetime.datetime(2022, 4, 12)
-end_date = datetime.datetime.now()
+end_date = datetime.datetime.datetime(2023, 4, 13)
 
 # 設定要取得的時間區間，每個時間區間為一個月
 periods = []
