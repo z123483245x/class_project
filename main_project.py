@@ -51,7 +51,7 @@ regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 # 進行訓練
 regressor.fit(X_train, y_train, epochs = 100, batch_size = 32)
 
-dataset_test = pd.read_csv('TSMC_Stock_Price_Test.csv')
+dataset_test = pd.read_csv('deta_Test.csv')
 real_stock_price = dataset_test.iloc[:, 1:2].values
 dataset_total = pd.concat((dataset_train['Open'], dataset_test['Open']), axis = 0)
 inputs = dataset_total[len(dataset_total) - len(dataset_test) - 60:].values
