@@ -1,34 +1,3 @@
-# import requests
-# from bs4 import BeautifulSoup
-# import csv
-
-# url = 'https://finance.yahoo.com/quote/%5EGSPC/history/'
-# headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}
-
-# response = requests.get(url,headers=headers)
-# soup = BeautifulSoup(response.text, 'html.parser')
-# table = soup.find_all('table')[0]
-
-# # 將表格內容存儲到 list 中
-# rows = table.find_all('tr')
-# data = []
-# for row in rows:
-#     cols = row.find_all('td')
-#     cols = [ele.text.strip() for ele in cols]
-#     data.append([ele for ele in cols if ele])
-
-# # 篩選出所需的數據
-# header = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-# data = data[1:-1]
-# data = [[ele[0], ele[1], ele[2], ele[3], ele[4], ele[5], ele[6]] for ele in data]
-
-# print(data)
-
-# # 將數據存儲到 CSV 文件中
-# with open('GSPC.csv', 'w', newline='') as file:
-#     writer = csv.writer(file)
-#     writer.writerow(header)
-#     writer.writerows(data)
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -80,8 +49,11 @@ for period in periods:
 
 # 篩選出所需的數據
 header = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
-data = data[1:-1]
-data = [[ele[0], ele[1], ele[2], ele[3], ele[4], ele[5], ele[6]] if len(ele) == 7 else [] for ele in data]
+data = data[0:-1]
+data = [[datetime.datetime.strptime(ele[0], '%b %d, %Y').strftime('%Y/%m/%d'), ele[1], ele[2], ele[3], ele[4], ele[5], ele[6]] if len(ele) == 7 else [] for ele in data]
+data = [ele for ele in data if ele]
+# 將資料根據日期排序
+data = sorted(data, key=lambda x: datetime.datetime.strptime(x[0], '%Y/%m/%d'))
 
 print(data)
 
