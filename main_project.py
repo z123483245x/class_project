@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt  # for 畫圖用
 import pandas as pd
 
 # Import the training set
-dataset_train = pd.read_csv('data.csv')  # 讀取訓練集
+dataset_train = pd.read_csv('GSPC_train.csv')  # 讀取訓練集
 training_set = dataset_train.iloc[:, 1:2].values  # 取「Open」欄位值
 # Feature Scaling
 from sklearn.preprocessing import MinMaxScaler
@@ -49,9 +49,9 @@ regressor.add(Dense(units = 1))
 regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 
 # 進行訓練
-regressor.fit(X_train, y_train, epochs = 100, batch_size = 32)
+regressor.fit(X_train, y_train, epochs = 50, batch_size = 32)
 
-dataset_test = pd.read_csv('deta_Test.csv')
+dataset_test = pd.read_csv('GSPC_test.csv')
 real_stock_price = dataset_test.iloc[:, 1:2].values
 dataset_total = pd.concat((dataset_train['Open'], dataset_test['Open']), axis = 0)
 inputs = dataset_total[len(dataset_total) - len(dataset_test) - 60:].values
