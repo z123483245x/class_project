@@ -7,7 +7,7 @@ import time
 
 start_time = time.time()
 # 設定起始日期和結束日期
-start_date = datetime.datetime(2022, 4, 13)
+start_date = datetime.datetime(2023, 2, 20)
 end_date = datetime.datetime.now()
 
 # 設定要取得的時間區間，每個時間區間為一個月
@@ -42,8 +42,6 @@ for period in periods:
     for row in rows:
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
-        # 將 Open、High、Low、Close、Adj Close 和 Volume 欄位轉換為浮點數
-        cols = [float(ele.replace(',', '')) if i in [1, 2, 3, 4, 5, 6] else ele for i, ele in enumerate(cols)]
         data.append([ele for ele in cols if ele])
 
     # 每個月抓資料間隔 3 秒
@@ -60,7 +58,7 @@ data = sorted(data, key=lambda x: datetime.datetime.strptime(x[0], '%Y/%m/%d'))
 print(data)
 
 # 將數據存儲到 CSV 文件中
-with open('test.csv', mode='w', encoding='big5', newline='') as file:
+with open('220_425.csv', mode='w', encoding='big5', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(header)
     writer.writerows(data)
