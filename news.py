@@ -34,7 +34,7 @@ for link in links:
     })
 
 # 寫入 CSV 檔案
-with open('news.csv', 'w', newline='', encoding='utf-8-sig') as f:
+with open('new.csv', 'w', newline='', encoding='utf-8-sig') as f:
     fieldnames = ['標題', '日期', '網址']
     writer = csv.DictWriter(f, fieldnames=fieldnames)
     writer.writeheader()
