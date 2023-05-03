@@ -1,45 +1,64 @@
-import requests
-import re
-from bs4 import BeautifulSoup
-from datetime import datetime
-import pytz
-import csv
+# import requests
+# from bs4 import BeautifulSoup
+# from datetime import datetime, date
 
-url = 'https://www.dailyfxasia.com/cn/sp-500/news-and-analysis'
+# url = 'https://news.ltn.com.tw/list/breakingnews/business'
+
+# res = requests.get(url)
+# soup = BeautifulSoup(res.text, 'html.parser')
+
+# news = soup.select('ul.list > li')
+
+# for item in news:
+#     # 获取新闻标题和時間
+#     title_and_time = item.select_one('a.tit').text.strip()
+#     time_str = title_and_time.split()[0]
+#     title = ' '.join(title_and_time.split()[1:])
+
+#     # 获取新闻链接
+#     link = item.select_one('a.tit')['href']
+
+#     # 解析新闻时间
+#     hour, minute = time_str.split(':')
+#     time = datetime.strptime(time_str, '%H:%M')
+#     today = date.today()
+#     datetime_obj = datetime.combine(today, time.time())
+#     formatted_date = datetime_obj.strftime('%Y-%m-%d')
+
+#     # 输出结果
+#     print(f'Title: {title}\nLink: {link}\nTime: {hour}:{minute}\nDate: {formatted_date}\n')
+
+import csv
+import requests
+from bs4 import BeautifulSoup
+from datetime import datetime, date
+
+url = 'https://news.ltn.com.tw/list/breakingnews/business'
 
 res = requests.get(url)
-
 soup = BeautifulSoup(res.text, 'html.parser')
 
-dfx_widget = soup.find('div', class_='dfx-widget__content')
+news = soup.select('ul.list > li')
 
-links = dfx_widget.find_all(['a'])
+with open('news.csv', mode='w', encoding='big5', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Title', 'Link', 'Date', 'Time'])
 
-# 使用正則表達式抓取日期
-pattern = re.compile(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
+    for item in news:
+        # 获取新闻标题和时间
+        title_and_time = item.select_one('a.tit').text.strip()
+        time_str = title_and_time.split()[0]
+        title = ' '.join(title_and_time.split()[1:])
 
-news_list = []
-for link in links:
-    text = link.text.strip()
-    href = link.get('href')
-    time_string = pattern.search(text).group()  # 使用正則表達式搜尋日期
-    title = text.replace(time_string, '').strip()  # 去除日期後的文字就是新聞標題
-    time_format = datetime.strptime(time_string, '%Y-%m-%d %H:%M:%S')  # 將時間字串轉換為 datetime 物件
-    tw_tz = pytz.timezone('Asia/Taipei')  # 取得台灣時區的 tzinfo 物件
-    time_tw = time_format.replace(tzinfo=pytz.utc).astimezone(tw_tz)  # 將時區轉換為台灣時區
-    news_list.append({
-        'title': title,
-        'time': time_tw.strftime('%Y-%m-%d %H:%M:%S'),
-        'url': href
-    })
+        # 获取新闻链接
+        link = item.select_one('a.tit')['href']
 
-# 寫入 CSV 檔案
-with open('news.csv', 'w', newline='', encoding='utf-8-sig') as f:
-    fieldnames = ['標題', '日期', '網址']
-    writer = csv.DictWriter(f, fieldnames=fieldnames)
-    writer.writeheader()
-    for news in news_list:
-        writer.writerow({'標題': news['title'], '日期': news['time'], '網址': news['url']})
-# 列印出所有新聞的標題、日期、網址
-for news in news_list:
-    print(news['title'], news['time'], news['url'])
+        # 解析新闻时间
+        hour, minute = time_str.split(':')
+        time = datetime.strptime(time_str, '%H:%M')
+        today = date.today()
+        datetime_obj = datetime.combine(today, time.time())
+        formatted_date = datetime_obj.strftime('%Y-%m-%d')
+
+        # 写入 CSV 文件
+        writer.writerow([title, link, formatted_date, f'{hour}:{minute}'])
