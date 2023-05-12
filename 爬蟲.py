@@ -7,7 +7,7 @@ import time
 
 start_time = time.time()
 # 設定起始日期和結束日期
-start_date = datetime.datetime(1927, 12, 31)
+start_date = datetime.datetime(2023, 4, 28)
 end_date = datetime.datetime.now()
 
 # 設定要取得的時間區間，每個時間區間為一個月
@@ -58,7 +58,7 @@ data = sorted(data, key=lambda x: datetime.datetime.strptime(x[0], '%Y/%m/%d'))
 print(data)
 
 # 將數據存儲到 CSV 文件中
-with open('123.csv', mode='w', encoding='big5', newline='') as file:
+with open('GSPC2.csv', mode='w', encoding='big5', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(header)
     writer.writerows(data)
