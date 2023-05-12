@@ -4,7 +4,7 @@ import csv
 import datetime
 from dateutil.relativedelta import relativedelta
 import time
-
+from tqdm import tqdm
 start_time = time.time()
 # 設定起始日期和結束日期
 start_date = datetime.datetime(2023, 4, 28)
@@ -25,8 +25,15 @@ headers = {
 # 初始化儲存資料的變數
 data = []
 
+# 將進度條顯示成一行，需要用到 carriage return 符號
+CR = '\r'
+
+# 設定進度條的寬度和填充符號
+progress_width = 50
+progress_symbol = '█'
+
 # 逐一取得每個時間區間的資料
-for period in periods:
+for i, period in enumerate(periods):
     start_date, end_date = period
     start_timestamp = int(start_date.replace(tzinfo=datetime.timezone.utc).timestamp())
     end_timestamp = int(end_date.replace(tzinfo=datetime.timezone.utc).timestamp())
@@ -47,6 +54,14 @@ for period in periods:
     # 每個月抓資料間隔 3 秒
     time.sleep(3)
 
+    # 計算目前的進度百分比和進度條的填充
+    progress_percent = (i + 1) / len(periods) * 100
+    progress_fill = int(progress_width * progress_percent / 100)
+    progress_bar = progress_symbol * progress_fill + '-' * (progress_width - progress_fill)
+
+    # 將進度條顯示在同一行
+    print(f'{CR}Progress: [{progress_bar}] {progress_percent:.2f}%', end='')
+
 # 篩選出所需的數據
 header = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 data = data[0:-1]
@@ -58,7 +73,7 @@ data = sorted(data, key=lambda x: datetime.datetime.strptime(x[0], '%Y/%m/%d'))
 print(data)
 
 # 將數據存儲到 CSV 文件中
-with open('GSPC2.csv', mode='w', encoding='big5', newline='') as file:
+with open('123.csv', mode='w', encoding='big5', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(header)
     writer.writerows(data)
